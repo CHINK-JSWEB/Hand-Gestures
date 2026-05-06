@@ -8,130 +8,108 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: #000; overflow: hidden; width: 100vw; height: 100vh; font-family: 'Share Tech Mono', monospace; }
-#video { position: absolute; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-#canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); }
+#video { position: absolute; width: 100%; height: 100%; object-fit: cover; }
+#canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-/* Dark overlay for HUD feel */
 #overlay {
   position: fixed; inset: 0; pointer-events: none; z-index: 5;
   background:
-    linear-gradient(rgba(0,255,180,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,180,0.03) 1px, transparent 1px);
+    linear-gradient(rgba(0,255,180,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,180,0.025) 1px, transparent 1px);
   background-size: 40px 40px;
 }
-/* vignette */
 #overlay::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.7) 100%);
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.75) 100%);
 }
 
-/* Top HUD */
-#topbar {
-  position: fixed; top: 0; left: 0; width: 100%;
-  padding: 12px 20px;
-  display: flex; align-items: center; justify-content: space-between;
-  background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
-  z-index: 100; pointer-events: none;
-}
-#topleft {
-  display: flex; flex-direction: column; gap: 2px;
-}
-#sys-title {
-  font-family: 'Orbitron', monospace;
-  font-size: 13px; font-weight: 900;
-  color: #00ffb4;
-  text-shadow: 0 0 20px #00ffb4, 0 0 40px #00ffb4;
-  letter-spacing: 3px;
-}
-#sys-sub {
-  font-size: 9px; color: rgba(0,255,180,0.5); letter-spacing: 2px;
-}
-#status-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #00ffb4;
-  box-shadow: 0 0 12px #00ffb4;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
-
-/* Corner decorations */
-.corner {
-  position: fixed; width: 40px; height: 40px;
-  z-index: 100; pointer-events: none;
-}
-.corner::before, .corner::after { content: ''; position: absolute; background: #00ffb4; box-shadow: 0 0 8px #00ffb4; }
-.corner::before { width: 100%; height: 2px; }
-.corner::after { width: 2px; height: 100%; }
-.corner.tl { top: 8px; left: 8px; }
-.corner.tr { top: 8px; right: 8px; transform: scaleX(-1); }
-.corner.bl { bottom: 48px; left: 8px; transform: scaleY(-1); }
-.corner.br { bottom: 48px; right: 8px; transform: scale(-1); }
-
-/* Scanline */
 #scanline {
-  position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-  background: linear-gradient(180deg, transparent, rgba(0,255,180,0.06), transparent);
+  position: fixed; top: -60px; left: 0; width: 100%; height: 60px;
+  background: linear-gradient(180deg, transparent, rgba(0,255,180,0.05), transparent);
   animation: scan 4s linear infinite; z-index: 6; pointer-events: none;
 }
 @keyframes scan { from{top:-60px} to{top:100%} }
 
-/* Detection badges */
-#detections {
-  position: fixed; top: 50%; left: 16px;
+.corner { position: fixed; width: 44px; height: 44px; z-index: 100; pointer-events: none; }
+.corner::before, .corner::after { content: ''; position: absolute; background: #00ffb4; box-shadow: 0 0 8px #00ffb4; }
+.corner::before { width: 100%; height: 2px; top: 0; left: 0; }
+.corner::after { width: 2px; height: 100%; top: 0; left: 0; }
+.corner.tl { top: 10px; left: 10px; }
+.corner.tr { top: 10px; right: 10px; transform: scaleX(-1); }
+.corner.bl { bottom: 46px; left: 10px; transform: scaleY(-1); }
+.corner.br { bottom: 46px; right: 10px; transform: scale(-1,-1); }
+
+/* Top bar */
+#topbar {
+  position: fixed; top: 0; left: 0; width: 100%;
+  padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, transparent 100%);
+  z-index: 100;
+}
+#sys-sub { font-size: 9px; color: rgba(0,255,180,0.5); letter-spacing: 2px; }
+#status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #00ffb4; box-shadow: 0 0 12px #00ffb4;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* Camera toggle button */
+#cam-toggle {
+  position: fixed; top: 14px; right: 40px;
+  background: rgba(0,255,180,0.08);
+  border: 1px solid rgba(0,255,180,0.35);
+  color: #00ffb4; font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; letter-spacing: 1px;
+  padding: 5px 12px; border-radius: 3px;
+  cursor: pointer; z-index: 200;
+  text-shadow: 0 0 8px #00ffb4;
+  box-shadow: 0 0 12px rgba(0,255,180,0.15);
+  transition: background 0.2s;
+}
+#cam-toggle:hover { background: rgba(0,255,180,0.2); }
+
+/* Detection count indicator */
+#det-counts {
+  position: fixed; top: 50%; left: 14px;
   transform: translateY(-50%);
-  display: flex; flex-direction: column; gap: 8px;
+  display: flex; flex-direction: column; gap: 6px;
   z-index: 100; pointer-events: none;
 }
-.det-badge {
+.count-badge {
   display: flex; align-items: center; gap: 8px;
-  padding: 8px 14px; border-radius: 2px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  animation: slideIn 0.3s ease;
+  padding: 6px 12px; border-radius: 2px;
+  font-size: 10px; letter-spacing: 2px;
   backdrop-filter: blur(8px);
   border-left: 3px solid;
+  animation: slideIn 0.25s ease;
+  transition: opacity 0.3s;
 }
-@keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
-.det-face {
-  background: rgba(0,200,255,0.1); border-color: #00c8ff; color: #00c8ff;
-  text-shadow: 0 0 10px #00c8ff; box-shadow: 0 0 20px rgba(0,200,255,0.2), inset 0 0 20px rgba(0,200,255,0.05);
-}
-.det-hand {
-  background: rgba(180,0,255,0.1); border-color: #b400ff; color: #b400ff;
-  text-shadow: 0 0 10px #b400ff; box-shadow: 0 0 20px rgba(180,0,255,0.2), inset 0 0 20px rgba(180,0,255,0.05);
-}
-.det-body {
-  background: rgba(0,255,100,0.1); border-color: #00ff64; color: #00ff64;
-  text-shadow: 0 0 10px #00ff64; box-shadow: 0 0 20px rgba(0,255,100,0.2), inset 0 0 20px rgba(0,255,100,0.05);
-}
-.badge-icon { font-size: 14px; }
-.badge-bar {
-  position: absolute; bottom: 0; left: 0; height: 1px;
-  animation: barLoad 1s ease forwards;
-}
-@keyframes barLoad { from{width:0} to{width:100%} }
+@keyframes slideIn { from{transform:translateX(-16px);opacity:0} to{transform:translateX(0);opacity:1} }
+.count-face { background: rgba(0,200,255,0.1); border-color: #00c8ff; color: #00c8ff; text-shadow: 0 0 10px #00c8ff; box-shadow: 0 0 16px rgba(0,200,255,0.15); }
+.count-hand { background: rgba(180,0,255,0.1); border-color: #b400ff; color: #b400ff; text-shadow: 0 0 10px #b400ff; box-shadow: 0 0 16px rgba(180,0,255,0.15); }
+.count-body { background: rgba(0,255,100,0.1); border-color: #00ff64; color: #00ff64; text-shadow: 0 0 10px #00ff64; box-shadow: 0 0 16px rgba(0,255,100,0.15); }
 
-/* Voice indicator */
+/* Voice bars */
 #voice-indicator {
-  position: fixed; top: 50%; right: 16px;
+  position: fixed; top: 50%; right: 14px;
   transform: translateY(-50%);
   display: none; flex-direction: column; align-items: center; gap: 3px;
   z-index: 100;
 }
 #voice-indicator.active { display: flex; }
 .voice-bar {
-  width: 4px; background: #00ffb4;
-  border-radius: 2px;
+  width: 4px; background: #00ffb4; border-radius: 2px;
   box-shadow: 0 0 8px #00ffb4;
-  animation: voiceAnim 0.4s ease-in-out infinite alternate;
+  animation: vAnim 0.4s ease-in-out infinite alternate;
 }
-.voice-bar:nth-child(1){height:8px;animation-delay:0s}
-.voice-bar:nth-child(2){height:16px;animation-delay:0.1s}
-.voice-bar:nth-child(3){height:24px;animation-delay:0.2s}
-.voice-bar:nth-child(4){height:16px;animation-delay:0.3s}
-.voice-bar:nth-child(5){height:8px;animation-delay:0.4s}
-@keyframes voiceAnim { from{transform:scaleY(0.3)} to{transform:scaleY(1)} }
+.voice-bar:nth-child(1){height:6px;animation-delay:0s}
+.voice-bar:nth-child(2){height:14px;animation-delay:0.1s}
+.voice-bar:nth-child(3){height:22px;animation-delay:0.2s}
+.voice-bar:nth-child(4){height:14px;animation-delay:0.3s}
+.voice-bar:nth-child(5){height:6px;animation-delay:0.4s}
+@keyframes vAnim { from{transform:scaleY(0.3)} to{transform:scaleY(1)} }
 
 /* Bottom bar */
 #bottombar {
@@ -144,17 +122,10 @@ body { background: #000; overflow: hidden; width: 100vw; height: 100vh; font-fam
 #credit {
   font-family: 'Orbitron', monospace;
   font-size: 9px; font-weight: 700;
-  color: rgba(0,255,180,0.6);
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px rgba(0,255,180,0.4);
+  color: rgba(0,255,180,0.5); letter-spacing: 2px;
 }
-#credit span {
-  color: #00ffb4;
-  text-shadow: 0 0 14px #00ffb4;
-}
-#fps-counter {
-  font-size: 9px; color: rgba(0,255,180,0.4); letter-spacing: 1px;
-}
+#credit span { color: #00ffb4; text-shadow: 0 0 12px #00ffb4; }
+#fps-el { font-size: 9px; color: rgba(0,255,180,0.35); letter-spacing: 1px; }
 </style>
 </head>
 <body>
@@ -164,25 +135,20 @@ body { background: #000; overflow: hidden; width: 100vw; height: 100vh; font-fam
 <div id="overlay"></div>
 <div id="scanline"></div>
 
-<!-- Corners -->
 <div class="corner tl"></div>
 <div class="corner tr"></div>
 <div class="corner bl"></div>
 <div class="corner br"></div>
 
-<!-- Top HUD -->
 <div id="topbar">
-  <div id="topleft">
-    <div id="sys-title">⬡ NEURAL SCAN</div>
-    <div id="sys-sub">MEDIAPIPE VISION SYSTEM v2.0</div>
-  </div>
+  <div id="sys-sub">AI VISION SYSTEM v2.1 — ONLINE</div>
   <div id="status-dot"></div>
 </div>
 
-<!-- Detections -->
-<div id="detections"></div>
+<button id="cam-toggle" onclick="toggleCamera()">📷 FLIP</button>
 
-<!-- Voice bars -->
+<div id="det-counts"></div>
+
 <div id="voice-indicator">
   <div class="voice-bar"></div>
   <div class="voice-bar"></div>
@@ -191,10 +157,9 @@ body { background: #000; overflow: hidden; width: 100vw; height: 100vh; font-fam
   <div class="voice-bar"></div>
 </div>
 
-<!-- Bottom -->
 <div id="bottombar">
-  <div id="credit">LEVEL 99 DEVELOPER — <span>JONNEL SORIANO</span></div>
-  <div id="fps-counter" id="fps">-- FPS</div>
+  <div id="credit">DEVELOPER BY <span>JONNEL SORIANO</span></div>
+  <div id="fps-el">-- FPS</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.js"></script>
@@ -205,22 +170,50 @@ body { background: #000; overflow: hidden; width: 100vw; height: 100vh; font-fam
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const detectionsEl = document.getElementById('detections');
+const detCountsEl = document.getElementById('det-counts');
 const voiceEl = document.getElementById('voice-indicator');
-const fpsEl = document.getElementById('fps-counter');
+const fpsEl = document.getElementById('fps-el');
 
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
+resize(); window.addEventListener('resize', resize);
 
-// ── State ──
-let faceData = null, handData = null, poseData = null;
-let prevDetected = new Set();
+// ── Camera ──
+let facingMode = 'user';
+let currentStream = null;
+
+async function startCamera() {
+  if (currentStream) currentStream.getTracks().forEach(t => t.stop());
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode, width:{ideal:1280}, height:{ideal:720} },
+      audio: false
+    });
+    video.srcObject = stream;
+    currentStream = stream;
+    await video.play();
+    // mirror only for front cam
+    video.style.transform = facingMode === 'user' ? 'scaleX(-1)' : 'none';
+    canvas.style.transform = facingMode === 'user' ? 'scaleX(-1)' : 'none';
+  } catch(e) { alert('Camera error: ' + e.message); }
+}
+
+async function toggleCamera() {
+  facingMode = facingMode === 'user' ? 'environment' : 'user';
+  await startCamera();
+}
+
+// ── Voice — queue based, NO spam ──
 let isSpeaking = false;
-let speakQueue = [];
+const speakQueue = [];
+// Track stable detections with debounce counters
+const stableCount = { face: 0, hand: 0, body: 0 };
+const STABLE_THRESHOLD = 8; // must be detected for 8 frames before announcing
+const LOST_THRESHOLD = 15;  // must be gone for 15 frames before announcing lost
+const lostCount = { face: 0, hand: 0, body: 0 };
+const announced = { face: false, hand: false, body: false };
 
-// ── Smart Voice — only speaks NEW detections ──
-function speak(text) {
+function trySpeak(text) {
+  if (speakQueue.includes(text)) return;
   speakQueue.push(text);
   processQueue();
 }
@@ -231,9 +224,7 @@ function processQueue() {
   isSpeaking = true;
   voiceEl.classList.add('active');
   const utter = new SpeechSynthesisUtterance(text);
-  utter.rate = 0.8;
-  utter.pitch = 0.3;
-  utter.volume = 1;
+  utter.rate = 0.8; utter.pitch = 0.3; utter.volume = 1;
   const voices = speechSynthesis.getVoices();
   const en = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('google'))
            || voices.find(v => v.lang.startsWith('en'));
@@ -241,211 +232,186 @@ function processQueue() {
   utter.onend = () => {
     isSpeaking = false;
     voiceEl.classList.remove('active');
-    setTimeout(processQueue, 300);
+    setTimeout(processQueue, 400);
   };
   speechSynthesis.speak(utter);
+}
+
+// ── Update stable detections ──
+function updateVoice(key, isDetected) {
+  if (isDetected) {
+    lostCount[key] = 0;
+    stableCount[key]++;
+    if (stableCount[key] === STABLE_THRESHOLD && !announced[key]) {
+      announced[key] = true;
+      trySpeak(`${key} detected`);
+    }
+  } else {
+    stableCount[key] = 0;
+    if (announced[key]) {
+      lostCount[key]++;
+      if (lostCount[key] >= LOST_THRESHOLD) {
+        announced[key] = false;
+        lostCount[key] = 0;
+        trySpeak(`${key} lost`);
+      }
+    }
+  }
 }
 
 // ── Draw Helpers ──
 function glowRect(x, y, w, h, color, label) {
   ctx.save();
-  // Main rect
-  ctx.shadowBlur = 20; ctx.shadowColor = color;
-  ctx.strokeStyle = color; ctx.lineWidth = 1.5;
-  ctx.globalAlpha = 0.6;
+  ctx.shadowBlur = 18; ctx.shadowColor = color;
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5;
   ctx.strokeRect(x, y, w, h);
-
-  // Corner L-brackets
-  ctx.globalAlpha = 1;
-  ctx.lineWidth = 3;
-  const cs = 20;
+  ctx.globalAlpha = 1; ctx.lineWidth = 3;
+  const cs = 18;
   ctx.beginPath();
-  // TL
-  ctx.moveTo(x, y+cs); ctx.lineTo(x, y); ctx.lineTo(x+cs, y);
-  // TR
-  ctx.moveTo(x+w-cs, y); ctx.lineTo(x+w, y); ctx.lineTo(x+w, y+cs);
-  // BL
-  ctx.moveTo(x, y+h-cs); ctx.lineTo(x, y+h); ctx.lineTo(x+cs, y+h);
-  // BR
-  ctx.moveTo(x+w-cs, y+h); ctx.lineTo(x+w, y+h); ctx.lineTo(x+w, y+h-cs);
+  ctx.moveTo(x,y+cs); ctx.lineTo(x,y); ctx.lineTo(x+cs,y);
+  ctx.moveTo(x+w-cs,y); ctx.lineTo(x+w,y); ctx.lineTo(x+w,y+cs);
+  ctx.moveTo(x,y+h-cs); ctx.lineTo(x,y+h); ctx.lineTo(x+cs,y+h);
+  ctx.moveTo(x+w-cs,y+h); ctx.lineTo(x+w,y+h); ctx.lineTo(x+w,y+h-cs);
   ctx.stroke();
-
-  // Label bg
-  ctx.globalAlpha = 0.85;
   const tw = ctx.measureText(label).width + 16;
-  ctx.fillStyle = 'rgba(0,0,0,0.7)';
-  ctx.fillRect(x, y - 22, tw, 20);
+  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = 'rgba(0,0,0,0.75)';
+  ctx.fillRect(x, y-22, tw, 20);
   ctx.strokeStyle = color; ctx.lineWidth = 1;
-  ctx.strokeRect(x, y - 22, tw, 20);
-
-  // Label text
+  ctx.strokeRect(x, y-22, tw, 20);
   ctx.globalAlpha = 1;
-  ctx.fillStyle = color;
-  ctx.font = 'bold 11px "Share Tech Mono", monospace';
-  ctx.fillText(label, x + 8, y - 7);
+  ctx.fillStyle = color; ctx.font = 'bold 11px "Share Tech Mono",monospace';
+  ctx.fillText(label, x+8, y-7);
   ctx.restore();
 }
 
-function glowLine(x1, y1, x2, y2, color, alpha=0.7) {
+function glowLine(x1,y1,x2,y2,color,a=0.65) {
   ctx.save();
-  ctx.shadowBlur = 10; ctx.shadowColor = color;
-  ctx.strokeStyle = color; ctx.lineWidth = 1.5;
-  ctx.globalAlpha = alpha;
+  ctx.shadowBlur=10; ctx.shadowColor=color;
+  ctx.strokeStyle=color; ctx.lineWidth=1.5; ctx.globalAlpha=a;
   ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
   ctx.restore();
 }
 
-function glowDot(x, y, color, r=4) {
+function glowDot(x,y,color,r=4) {
   ctx.save();
-  ctx.shadowBlur = 16; ctx.shadowColor = color;
-  ctx.fillStyle = color;
-  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
-  // inner white
-  ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(255,255,255,0.8)';
-  ctx.beginPath(); ctx.arc(x, y, r*0.35, 0, Math.PI*2); ctx.fill();
+  ctx.shadowBlur=14; ctx.shadowColor=color;
+  ctx.fillStyle=color;
+  ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0; ctx.fillStyle='rgba(255,255,255,0.8)';
+  ctx.beginPath(); ctx.arc(x,y,r*0.35,0,Math.PI*2); ctx.fill();
   ctx.restore();
 }
 
-const POSE_CONN = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28]];
-const HAND_CONN = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+const HAND_CONN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+const POSE_CONN=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28]];
 
-// ── FPS ──
-let lastTime = performance.now(), fps = 0, fpsFrames = 0;
+// ── State ──
+let faceData=null, handData=null, poseData=null;
+let lastT=performance.now(), fpsFrames=0, fps=0;
 
-// ── Main Draw ──
+// ── Draw Frame ──
 function drawFrame() {
-  // FPS
   fpsFrames++;
   const now = performance.now();
-  if (now - lastTime >= 1000) {
-    fps = fpsFrames; fpsFrames = 0; lastTime = now;
-    fpsEl.textContent = fps + ' FPS';
-  }
+  if (now - lastT >= 1000) { fps=fpsFrames; fpsFrames=0; lastT=now; fpsEl.textContent=fps+' FPS'; }
 
-  ctx.save();
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-  ctx.restore();
+  ctx.save(); ctx.drawImage(video,0,0,canvas.width,canvas.height); ctx.restore();
 
-  const currentDetected = new Set();
+  let faceCount=0, handCount=0, bodyCount=false;
 
-  // ── Face ──
+  // ── Faces ──
   if (faceData?.detections?.length > 0) {
-    currentDetected.add('face');
-    faceData.detections.forEach(det => {
+    faceCount = faceData.detections.length;
+    faceData.detections.forEach((det,i) => {
       const bb = det.boundingBox;
-      const x = bb.xCenter*canvas.width - (bb.width*canvas.width)/2;
-      const y = bb.yCenter*canvas.height - (bb.height*canvas.height)/2;
-      const w = bb.width*canvas.width, h = bb.height*canvas.height;
-      glowRect(x, y, w, h, '#00c8ff', '◈ FACE DETECTED');
-      det.landmarks?.forEach(lm => glowDot(lm.x*canvas.width, lm.y*canvas.height, '#00c8ff', 3));
+      const x=bb.xCenter*canvas.width-(bb.width*canvas.width)/2;
+      const y=bb.yCenter*canvas.height-(bb.height*canvas.height)/2;
+      const w=bb.width*canvas.width, h=bb.height*canvas.height;
+      glowRect(x,y,w,h,'#00c8ff',`◈ FACE ${faceCount>1?i+1:''}`);
+      det.landmarks?.forEach(lm=>glowDot(lm.x*canvas.width,lm.y*canvas.height,'#00c8ff',3));
     });
   }
 
   // ── Hands ──
   if (handData?.multiHandLandmarks?.length > 0) {
-    handData.multiHandLandmarks.forEach((lms, hi) => {
-      currentDetected.add('hand');
-      const xs = lms.map(l=>l.x*canvas.width), ys = lms.map(l=>l.y*canvas.height);
-      const minX=Math.min(...xs)-16, minY=Math.min(...ys)-16;
-      const maxX=Math.max(...xs)+16, maxY=Math.max(...ys)+16;
-      const side = handData.multiHandedness?.[hi]?.label === 'Left' ? 'LEFT' : 'RIGHT';
-      glowRect(minX, minY, maxX-minX, maxY-minY, '#b400ff', `◈ ${side} HAND`);
-      HAND_CONN.forEach(([a,b]) => glowLine(lms[a].x*canvas.width, lms[a].y*canvas.height, lms[b].x*canvas.width, lms[b].y*canvas.height, '#b400ff'));
-      lms.forEach(lm => glowDot(lm.x*canvas.width, lm.y*canvas.height, '#b400ff', 3));
+    handCount = handData.multiHandLandmarks.length;
+    handData.multiHandLandmarks.forEach((lms,hi) => {
+      const xs=lms.map(l=>l.x*canvas.width), ys=lms.map(l=>l.y*canvas.height);
+      const minX=Math.min(...xs)-14, minY=Math.min(...ys)-14;
+      const maxX=Math.max(...xs)+14, maxY=Math.max(...ys)+14;
+      const side=handData.multiHandedness?.[hi]?.label==='Left'?'LEFT':'RIGHT';
+      glowRect(minX,minY,maxX-minX,maxY-minY,'#b400ff',`◈ ${side} HAND`);
+      HAND_CONN.forEach(([a,b])=>glowLine(lms[a].x*canvas.width,lms[a].y*canvas.height,lms[b].x*canvas.width,lms[b].y*canvas.height,'#b400ff'));
+      lms.forEach(lm=>glowDot(lm.x*canvas.width,lm.y*canvas.height,'#b400ff',3));
     });
   }
 
   // ── Pose ──
   if (poseData?.poseLandmarks) {
-    const lms = poseData.poseLandmarks;
-    const vis = lms.filter(l=>l.visibility>0.5);
-    if (vis.length > 5) {
-      currentDetected.add('body');
-      POSE_CONN.forEach(([a,b]) => {
-        if (lms[a].visibility>0.5 && lms[b].visibility>0.5)
-          glowLine(lms[a].x*canvas.width, lms[a].y*canvas.height, lms[b].x*canvas.width, lms[b].y*canvas.height, '#00ff64');
+    const lms=poseData.poseLandmarks;
+    const vis=lms.filter(l=>l.visibility>0.55);
+    if (vis.length>6) {
+      bodyCount=true;
+      POSE_CONN.forEach(([a,b])=>{
+        if(lms[a].visibility>0.55&&lms[b].visibility>0.55)
+          glowLine(lms[a].x*canvas.width,lms[a].y*canvas.height,lms[b].x*canvas.width,lms[b].y*canvas.height,'#00ff64');
       });
-      lms.forEach(lm => { if(lm.visibility>0.5) glowDot(lm.x*canvas.width, lm.y*canvas.height, '#00ff64', 4); });
+      lms.forEach(lm=>{ if(lm.visibility>0.55) glowDot(lm.x*canvas.width,lm.y*canvas.height,'#00ff64',4); });
       const xs=vis.map(l=>l.x*canvas.width), ys=vis.map(l=>l.y*canvas.height);
-      glowRect(Math.min(...xs)-20, Math.min(...ys)-20, Math.max(...xs)-Math.min(...xs)+40, Math.max(...ys)-Math.min(...ys)+40, '#00ff64', '◈ BODY DETECTED');
+      glowRect(Math.min(...xs)-20,Math.min(...ys)-20,Math.max(...xs)-Math.min(...xs)+40,Math.max(...ys)-Math.min(...ys)+40,'#00ff64','◈ BODY');
     }
   }
 
   // ── Badges ──
-  const arr = [...currentDetected];
-  detectionsEl.innerHTML = arr.map(d => {
-    if (d==='face') return `<div class="det-badge det-face"><span class="badge-icon">👤</span> FACE LOCK</div>`;
-    if (d==='hand') return `<div class="det-badge det-hand"><span class="badge-icon">🖐</span> HAND LOCK</div>`;
-    if (d==='body') return `<div class="det-badge det-body"><span class="badge-icon">🧍</span> BODY LOCK</div>`;
-  }).join('');
+  let badges = '';
+  if (faceCount>0) badges+=`<div class="count-badge count-face">👤 FACE ×${faceCount}</div>`;
+  if (handCount>0) badges+=`<div class="count-badge count-hand">🖐 HAND ×${handCount}</div>`;
+  if (bodyCount)   badges+=`<div class="count-badge count-body">🧍 BODY ×1</div>`;
+  detCountsEl.innerHTML = badges;
 
-  // ── Voice — only on NEW detections ──
-  arr.forEach(d => {
-    if (!prevDetected.has(d)) {
-      if (d==='face') speak('Face detected');
-      if (d==='hand') speak('Hand detected');
-      if (d==='body') speak('Body detected');
-    }
-  });
-
-  // ── Voice — lost detection ──
-  prevDetected.forEach(d => {
-    if (!currentDetected.has(d)) {
-      if (d==='face') speak('Face lost');
-      if (d==='hand') speak('Hand lost');
-      if (d==='body') speak('Body lost');
-    }
-  });
-
-  prevDetected = currentDetected;
+  // ── Voice debounced ──
+  updateVoice('face', faceCount>0);
+  updateVoice('hand', handCount>0);
+  updateVoice('body', bodyCount);
 }
 
-// ── MediaPipe Setup ──
+// ── MediaPipe ──
 const faceDetection = new FaceDetection({
   locateFile: f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.4.1646425229/${f}`
 });
-faceDetection.setOptions({ model:'short', minDetectionConfidence:0.5 });
+faceDetection.setOptions({ model:'short', minDetectionConfidence:0.6 });
 faceDetection.onResults(r=>{ faceData=r; });
 
 const hands = new Hands({
   locateFile: f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/${f}`
 });
-hands.setOptions({ maxNumHands:2, modelComplexity:1, minDetectionConfidence:0.6, minTrackingConfidence:0.5 });
+hands.setOptions({ maxNumHands:4, modelComplexity:1, minDetectionConfidence:0.65, minTrackingConfidence:0.55 });
 hands.onResults(r=>{ handData=r; });
 
 const pose = new Pose({
   locateFile: f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/${f}`
 });
-pose.setOptions({ modelComplexity:1, smoothLandmarks:true, minDetectionConfidence:0.6, minTrackingConfidence:0.5 });
+pose.setOptions({ modelComplexity:1, smoothLandmarks:true, minDetectionConfidence:0.65, minTrackingConfidence:0.55 });
 pose.onResults(r=>{ poseData=r; });
 
 // ── Loop ──
-let frame = 0;
+let frame=0;
 async function loop() {
-  if (video.readyState >= 2) {
+  if (video.readyState>=2) {
     frame++;
-    await hands.send({ image: video });
+    await hands.send({image:video});
     drawFrame();
-    if (frame % 2 === 0) await faceDetection.send({ image: video });
-    if (frame % 3 === 0) await pose.send({ image: video });
+    if(frame%2===0) await faceDetection.send({image:video});
+    if(frame%3===0) await pose.send({image:video});
   }
   requestAnimationFrame(loop);
 }
 
-async function start() {
-  speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video:{ facingMode:'user', width:{ideal:1280}, height:{ideal:720} }, audio:false
-    });
-    video.srcObject = stream;
-    await video.play();
-    loop();
-  } catch(e) { alert('Camera error: ' + e.message); }
-}
-
-start();
+// ── Start ──
+speechSynthesis.getVoices();
+window.speechSynthesis.onvoiceschanged = ()=>speechSynthesis.getVoices();
+startCamera().then(()=>loop());
 </script>
 </body>
 </html>
